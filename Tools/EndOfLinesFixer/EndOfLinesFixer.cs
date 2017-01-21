@@ -17,19 +17,19 @@ namespace Tools
             this.recursive = recursive;
         }
 
-        public static void Start(string[] args)
+        public static void Start()
         {
             var extensions = new[] { "cs", "config", "csproj", "js", "cshtml", "resx" };
             Start(extensions, true, @"C:\servicetitan\app");
         }
 
-        public static void Start(string[] extensions, bool recursive, params string[] directoryPaths)
+        private static void Start(string[] extensions, bool recursive, params string[] directoryPaths)
         {
             var directories = directoryPaths.Select(path =>
             {
                 var directory = new DirectoryInfo(path);
                 if (!directory.Exists)
-                    throw new Exception(string.Format("Directory '{0}' doesn't exists.", directory.FullName));
+                    throw new Exception($"Directory '{directory.FullName}' doesn't exists.");
                 return directory;
             });
 

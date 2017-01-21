@@ -22,6 +22,9 @@ namespace Tools
                 case nameof(FileDuplicationDetector):
                     action = FileDuplicationDetector.Start;
                     break;
+                case nameof(EndOfLinesFixer):
+                    action = EndOfLinesFixer.Start;
+                    break;
                 default:
                     action = null;
                     break;
