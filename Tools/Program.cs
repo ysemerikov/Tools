@@ -9,14 +9,13 @@ namespace Tools
         [Test]
         public void Test()
         {
-            Main();
+            Main(null);
         }
 
-        private static void Main()
+        private static void Main(string[] args)
         {
-            var extensions = new[] {"cs", "config", "csproj", "js", "cshtml", "resx"};
             var startNew = Stopwatch.StartNew();
-            EndOfLinesFixer.Start(extensions, true, @"C:\servicetitan\app");
+            EndOfLinesFixer.Start(args ?? new string[0]);
             Console.WriteLine(startNew.Elapsed);
         }
     }
