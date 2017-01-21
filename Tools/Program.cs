@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Tools
@@ -14,8 +15,25 @@ namespace Tools
 
         private static void Main(string[] args)
         {
+            Action action;
+            switch (args.FirstOrDefault())
+            {
+                case null:
+                case nameof(FileDuplicationDetector):
+                    action = FileDuplicationDetector.Start;
+                    break;
+                default:
+                    action = null;
+                    break;
+            }
+
+            TimeCount(action);
+        }
+
+        private static void TimeCount(Action action)
+        {
             var startNew = Stopwatch.StartNew();
-            EndOfLinesFixer.Start(args ?? new string[0]);
+            action();
             Console.WriteLine(startNew.Elapsed);
         }
     }
