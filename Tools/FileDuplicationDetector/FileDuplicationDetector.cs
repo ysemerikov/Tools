@@ -11,18 +11,25 @@ namespace Tools
 {
     public class FileDuplicationDetector
     {
+        private readonly bool writeLog;
         private readonly Counter counter;
         private readonly DirectoryInfo directory;
+        private readonly DirectoryInfo checkDirectory;
 
-        public FileDuplicationDetector(string path)
+        public FileDuplicationDetector(string path, string checkDirectoryPath, bool writeLog)
         {
+            this.writeLog = writeLog;
             directory = new DirectoryInfo(path);
+            checkDirectory = checkDirectoryPath == null ? null : new DirectoryInfo(checkDirectoryPath);
             counter = new Counter();
         }
 
         public static void Start()
         {
-            var detector = new FileDuplicationDetector(@"D:\from3Tb\Photos");
+            Console.OutputEncoding = Encoding.UTF8;
+
+            var detector = new FileDuplicationDetector(@"D:\from3Tb\Photos", @"D:\from3Tb\ToCheck", true);
+//            var detector = new FileDuplicationDetector(@"D:\from3Tb\Photos", null, true);
             detector.Detect().Wait();
         }
 
@@ -55,15 +62,15 @@ namespace Tools
             var duplicates = (await Task.WhenAll(tasks))
                 .Where(l => l != null);
 
-            var c = duplicates.Sum(l => l.Count - 1);
+            var duplicateCounter = WorkWithDuplicates(duplicates);
 
             Console.WriteLine(counter.ToString());
-            Console.WriteLine($"Duplicates total: {c}");
+            Console.WriteLine($"{nameof(duplicateCounter)}: {duplicateCounter}");
         }
 
         private async Task<byte[]> ByPart(FileInfo file)
         {
-            const int offset = 1024*1024;
+            const int offset = 512*1024;
             const int size = 1024;
 
             if (file.Length < size + offset)
@@ -141,6 +148,64 @@ namespace Tools
             }
 
             return true;
+        }
+
+        private int WorkWithDuplicates(IEnumerable<List<FileInfo>> duplicates)
+        {
+            var total = 0;
+            if (checkDirectory != null)
+            {
+                var i = 0;
+                foreach (var list in duplicates)
+                {
+                    total += list.Count - 1;
+                    CopyToDirectory(i.ToString("0000_"), list.OrderBy(f => f.FullName), checkDirectory);
+                    i++;
+                }
+            }
+            else
+            {
+                foreach (var list in duplicates)
+                {
+                    total += list.Count - 1;
+                    Remove(list.OrderBy(f => f.FullName).Skip(1));
+                }
+            }
+
+            return total;
+        }
+
+        private void CopyToDirectory(string prefix, IOrderedEnumerable<FileInfo> files, DirectoryInfo directoryInfo)
+        {
+            var extension = default(string);
+            var i = 0;
+            foreach (var file in files)
+            {
+                if (extension == null)
+                    extension = file.Extension;
+
+                if (writeLog)
+                    Console.WriteLine(file.FullName);
+
+                file.CopyTo(Path.Combine(directoryInfo.FullName, $"{prefix}{i++}{extension}"));
+            }
+
+            if (writeLog)
+                Console.WriteLine();
+        }
+
+        private void Remove(IEnumerable<FileInfo> files)
+        {
+            foreach (var file in files)
+            {
+                if (writeLog)
+                    Console.WriteLine($"RM {file.FullName}");
+
+                file.Delete();
+            }
+
+            if (writeLog)
+                Console.WriteLine();
         }
 
         private class Counter
