@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
+using Tools.SerializerComparer;
 
 namespace Tools
 {
     internal class Program
     {
-        [Test]
-        public void Test()
-        {
-            Main(null);
-        }
-
         private static void Main(string[] args)
         {
             Action action;
             switch (args.FirstOrDefault())
             {
                 case null:
+                case nameof(SerializerComparer):
+                    action = EntryPoint.Start;
+                    break;
                 case nameof(FileDuplicationDetector):
                     action = FileDuplicationDetector.Start;
                     break;

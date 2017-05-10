@@ -33,12 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MsgPack, Version=0.8.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsgPack.Cli.0.8.1\lib\net45\MsgPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EndOfLinesFixer\EndOfLinesFixer.cs" />
@@ -46,6 +52,23 @@
     <Compile Include="FileDuplicationDetector\FileDuplicationDetector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializerComparer\Comparer.cs" />
+    <Compile Include="SerializerComparer\Models\IHasEquals.cs" />
+    <Compile Include="SerializerComparer\PerformanceTester.cs" />
+    <Compile Include="SerializerComparer\SerializationsTesters\Models.cs" />
+    <Compile Include="SerializerComparer\SerializationsTesters\SerializationTesterBase.cs" />
+    <Compile Include="SerializerComparer\SerializationsTesters\MultiThreadSerializationTester.cs" />
+    <Compile Include="SerializerComparer\SerializationsTesters\SingleThreadSerializationTester.cs" />
+    <Compile Include="SerializerComparer\Serializers\Deflate2DataContractSerializer.cs" />
+    <Compile Include="SerializerComparer\Serializers\DeflateDataContractSerializer.cs" />
+    <Compile Include="SerializerComparer\Serializers\DeflateBinnarySerializer.cs" />
+    <Compile Include="SerializerComparer\Serializers\SimpleDataContractSerializer.cs" />
+    <Compile Include="SerializerComparer\Serializers\ISerializer.cs" />
+    <Compile Include="SerializerComparer\Models\SmallModel.cs" />
+    <Compile Include="SerializerComparer\Serializers\SimpleMessagePackSerializer.cs" />
+    <Compile Include="SerializerComparer\Serializers\SimpleBinnarySerializer.cs" />
+    <Compile Include="SerializerComparer\EntryPoint.cs" />
+    <Compile Include="SerializerComparer\TypeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
