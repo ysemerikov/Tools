@@ -54,6 +54,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GroBuf, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GroBuf.1.2.0\lib\net40\GroBuf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MsgPack, Version=0.8.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
       <HintPath>..\packages\MsgPack.Cli.0.8.1\lib\net45\MsgPack.dll</HintPath>
       <Private>True</Private>
@@ -94,6 +98,7 @@
     <Compile Include="SerializerComparer\Serializers\SimpleDataContractSerializer.cs" />
     <Compile Include="SerializerComparer\Serializers\ISerializer.cs" />
     <Compile Include="SerializerComparer\Models\SmallModel.cs" />
+    <Compile Include="SerializerComparer\Serializers\SimpleGroBuffSerializer.cs" />
     <Compile Include="SerializerComparer\Serializers\SimpleMessagePackSerializer.cs" />
     <Compile Include="SerializerComparer\Serializers\SimpleBinnarySerializer.cs" />
     <Compile Include="SerializerComparer\EntryPoint.cs" />

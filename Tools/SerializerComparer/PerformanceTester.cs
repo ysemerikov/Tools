@@ -13,8 +13,9 @@ namespace Tools.SerializerComparer
         {
             return new ISerializer<T>[]
             {
+                new SimpleGroBuffSerializer<T>(),
 //                new ProtobufSerializer<T>(), 
-                new MsgSerializer<T>(),
+//                new MsgSerializer<T>(),
                 new SimpleBinnarySerializer<T>(),
 //                new DeflateBinnarySerializer<T>(),
 //                new SimpleDataContractSerializer<T>(),
@@ -23,7 +24,7 @@ namespace Tools.SerializerComparer
             };
         }
 
-        public static void Start(List<T> models, int countOfTests)
+        public static void Start(List<T> models, int countOfTests, bool checkEquals = true)
         {
             var serializers = GetSerializers();
 
@@ -34,7 +35,7 @@ namespace Tools.SerializerComparer
                         );
 
                 // Warm Up
-                comparer.Compare(models, 1, true);
+                comparer.Compare(models, 1, checkEquals);
 
                 // Tests
                 Console.WriteLine($"SingleThread, {countOfTests} tests, {models.Count} {typeof (T).Name}s");
@@ -50,7 +51,7 @@ namespace Tools.SerializerComparer
                         );
 
                 // Warm Up
-                comparer.Compare(models, 1, true);
+                comparer.Compare(models, 1, checkEquals);
 
                 // Tests
                 Console.WriteLine($"MultiThread, {countOfTests} tests, {models.Count} {typeof(T).Name}s");

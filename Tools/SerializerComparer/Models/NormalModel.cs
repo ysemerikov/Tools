@@ -67,7 +67,7 @@ namespace Tools.SerializerComparer.Models
 
         private static NormalModel GenerateOne(Random rand)
         {
-            const int size = 16*1024;
+            const int size = 64*1024;
 
             const int strSize = size/32;
             const int strsSize = size/8;
