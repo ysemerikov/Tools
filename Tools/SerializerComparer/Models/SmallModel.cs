@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Tools.SerializerComparer.Models
 {
     [Serializable]
+    [DataContract]
     public class SmallModel : IHasEquals<SmallModel>
     {
+        [DataMember]
         public int Int { get; set; }
+        [DataMember]
         public long Long { get; set; }
+        [DataMember]
         public string String { get; set; }
+        [DataMember]
         public DateTime DateTime { get; set; }
+        [DataMember]
         public byte[] Bytes { get; set; }
 
         public static string RandomString(Random rand, int length)
