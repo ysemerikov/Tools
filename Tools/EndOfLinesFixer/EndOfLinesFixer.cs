@@ -54,11 +54,10 @@ namespace Tools
                     .AsParallel()
                     .SelectMany(e =>
                         directories.SelectMany(d => d.EnumerateFiles(ToPattern(e), recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)))
-                    .Select(Fix)
-                    .ToArray();
-            if (tasks.Length > 0)
-                Task.WaitAll(tasks);
-            return tasks.Count(t => t.Result);
+                    .Select(Fix);
+
+            var results = Task.WhenAll(tasks).Result;
+            return results.Count(t => t);
         }
 
         private static async Task<bool> Fix(FileInfo fileInfo)
