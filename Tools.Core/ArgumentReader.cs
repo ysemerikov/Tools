@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Tools.Core
 {
-    public class ArgumentReader
+    public class ArgumentReader : IReadOnlyCollection<string>
     {
         private readonly string[] args;
+
+        public int Count => args.Length;
 
         public ArgumentReader(string[] args)
         {
@@ -20,6 +24,16 @@ namespace Tools.Core
                 throw new ArgumentOutOfRangeException();
 
             return default;
+        }
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            return ((IEnumerable<string>) args).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
