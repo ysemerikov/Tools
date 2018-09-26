@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Tools.Core.Logging;
 
@@ -58,6 +60,64 @@ namespace Tools.Core.HttpTesterNamespace
                     logger.WriteLine(header);
                 }
             }
+        }
+
+        public async Task GetTcpHeaders()
+        {
+            if (url.Scheme != "http")
+                throw new NotSupportedException();
+
+            var bytes = new List<byte>();
+
+            using (var tcpClient = new TcpClient(url.Host, url.Port))
+            using (var stream = tcpClient.GetStream())
+            {
+                var builder = new StringBuilder();
+                builder.AppendLine($"GET {url.PathAndQuery} HTTP/1.1");
+                builder.AppendLine($"Host: {url.Host}");
+                builder.AppendLine("Connection: close");
+                foreach (var header in headers)
+                {
+                    builder.AppendLine($"{header.Name}: {header.Value}");
+                }
+                builder.AppendLine();
+
+                var data = Encoding.ASCII.GetBytes(builder.ToString());
+                await stream.WriteAsync(data, 0, data.Length);
+
+                var state = 0;
+                var nextByte = -1;
+
+                while ((nextByte = stream.ReadByte()) >= 0)
+                {
+                    switch (state)
+                    {
+                        case 0:
+                        case 2:
+                            if (nextByte == '\r')
+                                state++;
+                            else
+                                state = 0;
+                            break;
+                        case 1:
+                        case 3:
+                            if (nextByte == '\n')
+                                state++;
+                            else
+                                state = 0;
+                            break;
+                        default:
+                            throw new Exception();
+                    }
+
+                    bytes.Add((byte) nextByte);
+
+                    if (state == 4)
+                        break;
+                }
+            }
+
+            logger.WriteLine(Encoding.ASCII.GetString(bytes.ToArray(), 0, bytes.Count));
         }
 
         private static IEnumerable<string> HeaderToStrings(KeyValuePair<string, IEnumerable<string>> header)
