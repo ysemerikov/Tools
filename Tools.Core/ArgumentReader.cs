@@ -1,39 +1,35 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tools.Core
 {
-    public class ArgumentReader : IReadOnlyCollection<string>
+    public class ArgumentReader
     {
-        private readonly string[] args;
+        private readonly List<string> args;
+        private readonly int from;
+        private int position;
 
-        public int Count => args.Length;
-
-        public ArgumentReader(string[] args)
+        public ArgumentReader(ICollection<string> args, int from = 0)
         {
-            this.args = args;
+            if (from < 0)
+                throw new ArgumentException($"'from' ({from}) should be >= 0");
+            if (from > args.Count)
+                throw new ArgumentException($"'from' ({from}) should be <= length of arguments ({args.Count}).");
+
+            this.args = args.Where(x => x != default).ToList();
+            this.from = from;
+            this.position = from;
         }
 
-        public string GetString(int position, bool failIfOutOfRange = false)
+        public ArgumentReader GetNextReader()
         {
-            if (position < args.Length)
-                return args[position];
-
-            if (failIfOutOfRange)
-                throw new ArgumentOutOfRangeException();
-
-            return default;
+            return new ArgumentReader(args, position);
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public string ReadNextStringOrDefault()
         {
-            return ((IEnumerable<string>) args).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return position < args.Count ? args[position++] : default;
         }
     }
 }
