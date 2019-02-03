@@ -84,6 +84,7 @@ function KibanaLoader(queryString, fields) {
     this.queryString = queryString;
     this.fields = fields;
     this.requestSize = 10000;
+    this.useOptimizationForBinarySearch = true;
 }
 KibanaLoader.prototype.load = async function(timeRange) {
     let indexes = await this.__requestToElsIndexes(timeRange);
@@ -129,9 +130,19 @@ KibanaLoader.prototype.__loadFromIndex = async function(index, timeRange) {
     if (data.total <= data.entities.length)
         return data.entities;
 
-    let firstHalf = await this.__loadFromIndex(index, timeRange.getFirstHalf());
-    let secondHalf = await this.__loadFromIndex(index, timeRange.getSecondHalf());
-    return firstHalf.concat(secondHalf);
+    let optIndicator = data.total / this.requestSize / 2;
+    let timeRanges = [timeRange.getFirstHalf(), timeRange.getSecondHalf()];
+
+    while (this.useOptimizationForBinarySearch && optIndicator > 1) {
+        optIndicator /= 2;
+        timeRanges = timeRanges.map(x => [x.getFirstHalf(), x.getSecondHalf()]).reduce((a, b) => a.concat(b));
+    }
+
+    for (let i = 0; i < timeRanges.length; ++i) {
+        timeRanges[i] = await this.__loadFromIndex(index, timeRanges[i]); 
+    }
+
+    return timeRanges.reduce((a, b) => a.concat(b));
 };
 KibanaLoader.prototype.__requestToElsIndex = async function(indexName, timeRange) {
     let indexObject = { "index":[indexName], "ignore_unavailable":true };
