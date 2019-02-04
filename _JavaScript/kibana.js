@@ -92,7 +92,7 @@ KibanaLoader.prototype.load = async function(timeRange) {
     for (let i = 0; i < indexes.length; ++i) {
         indexes[i] = await this.__loadFromIndex(indexes[i], timeRange);
     }
-    return indexes.reduce((a, b) => a.concat(b));
+    return indexes.reduce((a, b) => a.concat(b)).sort((a, b) => a.__sort - b.__sort);
 };
 KibanaLoader.prototype.__requestToElsIndexes = async function(timeRange) {
     let requestObject = {
@@ -192,8 +192,15 @@ KibanaLoader.prototype.__requestToElsIndex = async function(indexName, timeRange
         1000);
 
     let hits = response.responses[0].hits;
-    let result = {total: hits.total, entities: hits.hits};
+    let entities = hits.hits.map(x => {
+        let entity = {__sort: x.sort[0]};
+        for (let j = 0; j < this.fields.length; ++j)
+            entity[this.fields[j]] = x.fields[this.fields[j]][0];
+        return entity;
+    });
 
-    console.log({total:result.total, count:result.entities.length});
+    let result = { total: hits.total, entities: entities };
+
+    console.log({ total:result.total, count:entities.length });
     return result;
 };
