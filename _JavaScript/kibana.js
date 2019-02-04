@@ -20,16 +20,87 @@ Helper = {
 
         return await actionAsync();
     },
-    load: function() {
-        let loader = new KibanaLoader('Deployment:"master" && Code:"IncomingCall" && Message:"total response time"', ["Message"]);
-        return loader.load(new TimeRange(new Date("2019-01-31T22:00:00"), new Date("2019-02-02T00:00:00")));
+    load: function(queryString, from, to, fields) {
+        if (!queryString) queryString = 'Deployment:"master" && Code:"IncomingCall" && Message:"total response time"';
+        if (!from) from = new Date("2019-01-31T22:00:00");
+        if (!to) to = new Date("2019-02-02T00:00:00");
+        if (!fields) fields = ["Message"];
+
+        let loader = new KibanaLoader(queryString, fields);
+        return loader.load(new TimeRange(from, to));
+    },
+    loadFromUI: async function () {
+        let scope = angular.element("[columns='state.columns']").scope();
+
+        let queryString = scope.typeahead.query; //$("[ng-model='state.query']").val();
+        let from = new Date(scope.timeRange.from);
+        let to = new Date(scope.timeRange.to);
+        let fields = scope.state.columns.filter(x => x !== "_source");
+
+        if (fields.length === 0) {
+            alert("Please specify the fields.");
+            return;
+        }
+
+        let confirmMessage = queryString + '\n'
+            + from.toISOString() + ' - ' + to.toISOString() + '\n'
+            + fields;
+
+        if (confirm(confirmMessage)) {
+            return { fields: fields, result: await this.load(queryString, from, to, fields) };
+        }
+    },
+    addButtonToUI: function() {
+        let id = 'kibanaButton';
+        if (document.getElementById(id)) return;
+
+        let b = document.createElement('button');
+        b.id = id;
+        b.style.border = '1px solid black';
+        b.onclick = async function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            let a = Helper.__addTextareaToUI();
+
+            let result = await Helper.loadFromUI();
+            if (!result) {
+                a.value = "\r\nCanceled.";
+            } else if (result.fields.length === 1) {
+                let field = result.fields[0];
+                a.value = result.result.map(x => x[field]).join('\n');
+            } else {
+                for (let i = 0; i < result.result.length; ++i)
+                    delete result.result[i].__sort;
+                a.value = result.result.map(x => JSON.stringify(x)).join('\n');
+            }
+
+            
+        };
+
+        $('[aria-label="Search"]')[0].parentElement.appendChild(b);
+    },
+    __addTextareaToUI: function() {
+        let id = 'kibanaTextarea';
+        let existsElement = document.getElementById(id);
+        if (existsElement) return existsElement;
+
+        let a = document.createElement('textarea');
+        a.id = id;
+        a.style.position = 'fixed';
+        a.style.width = '100%';
+        a.value = '\r\nPress ESC to close this.';
+        a.onkeyup = function(e) { if (e.code === 'Escape') document.body.removeChild(a); };
+
+        document.body.appendChild(a);
+        return a;
     }
 };
 
 function TimeRange(from, to) {
     if (from instanceof Date && to instanceof Date) {
-        from = this.__getUtcEpochMills(from);
-        to = this.__getUtcEpochMills(to);
+        from = from.getTime();
+        to = to.getTime();
     } else if (typeof from !== 'number' || typeof to !== 'number') {
         throw "from and to must be Dates or numbers.";
     }
@@ -40,9 +111,6 @@ function TimeRange(from, to) {
     this.from = from;
     this.to = to;
 }
-TimeRange.prototype.__getUtcEpochMills = function(date) {
-    return date.getTime() - date.getTimezoneOffset() * 60000;
-};
 TimeRange.prototype.getIntersection = function(timeRange) {
     if (this.to < timeRange.from || timeRange.to < this.from)
         throw "time ranges don't intersect.";
@@ -204,3 +272,5 @@ KibanaLoader.prototype.__requestToElsIndex = async function(indexName, timeRange
     console.log({ total:result.total, count:entities.length });
     return result;
 };
+
+Helper.addButtonToUI();
