@@ -157,10 +157,13 @@ function KibanaLoader(queryString, fields) {
 KibanaLoader.prototype.load = async function(timeRange) {
     let indexes = await this.__requestToElsIndexes(timeRange);
     console.log(indexes);
+
+    let result = [];
     for (let i = 0; i < indexes.length; ++i) {
-        indexes[i] = await this.__loadFromIndex(indexes[i], timeRange);
+        let indexData = await this.__loadFromIndex(indexes[i], timeRange);
+        result.push(...indexData);
     }
-    return indexes.reduce((a, b) => a.concat(b)).sort((a, b) => b.__sort - a.__sort);
+    return result.sort((a, b) => b.__sort - a.__sort);
 };
 KibanaLoader.prototype.__requestToElsIndexes = async function(timeRange) {
     let requestObject = {
@@ -182,14 +185,12 @@ KibanaLoader.prototype.__requestToElsIndexes = async function(timeRange) {
     let response = await Helper.sendPost("/elasticsearch/logstash-*/_field_stats?level=indices", JSON.stringify(requestObject));
 
     let indexes = Object.keys(response.indices);
-    for (let i = 0; i < indexes.length; ++i) {
-        let x = response.indices[indexes[i]].fields["@timestamp"];
+
+    return indexes.map(indexName => {
+        let x = response.indices[indexName].fields["@timestamp"];
         let indexTimeRange = new TimeRange(x.min_value, x.max_value);
-
-        indexes[i] = new Index(indexes[i], indexTimeRange); // dirty..
-    }
-
-    return indexes;
+        return new Index(indexName, indexTimeRange);
+    });
 };
 KibanaLoader.prototype.__loadFromIndex = async function(index, timeRange) {
     timeRange = timeRange.getIntersection(index.timeRange);
@@ -198,19 +199,21 @@ KibanaLoader.prototype.__loadFromIndex = async function(index, timeRange) {
     if (data.total <= data.entities.length)
         return data.entities;
 
-    let optIndicator = data.total / this.requestSize / 2;
     let timeRanges = [timeRange.getFirstHalf(), timeRange.getSecondHalf()];
+    let optIndicator = data.total / this.requestSize / 2;
 
     while (this.useOptimizationForBinarySearch && optIndicator > 1) {
         optIndicator /= 2;
         timeRanges = timeRanges.map(x => [x.getFirstHalf(), x.getSecondHalf()]).reduce((a, b) => a.concat(b));
     }
 
+    let result = [];
     for (let i = 0; i < timeRanges.length; ++i) {
-        timeRanges[i] = await this.__loadFromIndex(index, timeRanges[i]); 
+        let depthData = await this.__loadFromIndex(index, timeRanges[i]);
+        result.push(...depthData);
     }
 
-    return timeRanges.reduce((a, b) => a.concat(b));
+    return result;
 };
 KibanaLoader.prototype.__requestToElsIndex = async function(indexName, timeRange) {
     let indexObject = { "index":[indexName], "ignore_unavailable":true };
