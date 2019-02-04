@@ -160,7 +160,7 @@ KibanaLoader.prototype.load = async function(timeRange) {
     for (let i = 0; i < indexes.length; ++i) {
         indexes[i] = await this.__loadFromIndex(indexes[i], timeRange);
     }
-    return indexes.reduce((a, b) => a.concat(b)).sort((a, b) => a.__sort - b.__sort);
+    return indexes.reduce((a, b) => a.concat(b)).sort((a, b) => b.__sort - a.__sort);
 };
 KibanaLoader.prototype.__requestToElsIndexes = async function(timeRange) {
     let requestObject = {
