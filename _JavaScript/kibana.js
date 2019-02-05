@@ -166,7 +166,8 @@ KibanaLoader.prototype.load = async function(timeRange) {
     let result = [];
     for (let i = 0; i < indexes.length; ++i) {
         let indexData = await this.__loadFromIndex(indexes[i], timeRange);
-        result.push(...indexData);
+        for (let i = 0; i < indexData.length; ++i)
+            result.push(indexData[i]);
     }
     return result.sort((a, b) => b.__sort - a.__sort);
 };
