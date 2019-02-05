@@ -72,7 +72,7 @@ Helper = {
 
             let result = await Helper.loadFromUI();
             if (!result) {
-                a.value = "\r\nCanceled.";
+                a.value = "Canceled.\r\nFocus and press ESC to close this.";
             } else if (result.fields.length === 1) {
                 let field = result.fields[0];
                 a.value = result.result.map(x => x[field]).join('\n');
@@ -94,7 +94,7 @@ Helper = {
         a.id = id;
         a.style.position = 'fixed';
         a.style.width = '100%';
-        a.value = '\r\nPress ESC to close this.';
+        a.value = 'Here will be result when all data is downloaded.\r\nLook at the console for progress. Focus and press ESC to close this.';
         a.onkeyup = function(e) { if (e.code === 'Escape') document.body.removeChild(a); };
 
         document.body.appendChild(a);
