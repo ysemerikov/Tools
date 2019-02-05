@@ -54,9 +54,16 @@ Helper = {
         let id = 'kibanaButton';
         if (document.getElementById(id)) return;
 
+        let i = document.createElement('i');
+        i.className="fa fa-download";
         let b = document.createElement('button');
-        b.id = id;
-        b.style.border = '1px solid black';
+        b.appendChild(i);
+        let s = document.createElement('span');
+        s.id = id;
+        s.appendChild(b);
+        let e = $('span[tooltip="New Search"]')[0];
+        e.parentElement.insertBefore(s, e);
+
         b.onclick = async function (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -72,13 +79,11 @@ Helper = {
             } else {
                 for (let i = 0; i < result.result.length; ++i)
                     delete result.result[i].__sort;
-                a.value = result.result.map(x => JSON.stringify(x)).join('\n');
+                a.value = result.result.map(x => JSON.stringify(x)).join(',\n');
             }
 
             
         };
-
-        $('[aria-label="Search"]')[0].parentElement.appendChild(b);
     },
     __addTextareaToUI: function() {
         let id = 'kibanaTextarea';
