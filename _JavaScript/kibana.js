@@ -199,24 +199,27 @@ KibanaLoader.prototype.__requestToElsIndexes = async function(timeRange) {
     });
 };
 KibanaLoader.prototype.__loadFromIndex = async function(index, timeRange) {
-    timeRange = timeRange.getIntersection(index.timeRange);
-
-    let data = await this.__requestToElsIndex(index.name, timeRange);
-    if (data.total <= data.entities.length)
-        return data.entities;
-
-    let timeRanges = [timeRange.getFirstHalf(), timeRange.getSecondHalf()];
-    let optIndicator = data.total / this.requestSize / 2;
-
-    while (this.useOptimizationForBinarySearch && optIndicator > 1) {
-        optIndicator /= 2;
-        timeRanges = timeRanges.map(x => [x.getFirstHalf(), x.getSecondHalf()]).reduce((a, b) => a.concat(b));
-    }
-
+    let timeRanges = [timeRange.getIntersection(index.timeRange)];
     let result = [];
-    for (let i = 0; i < timeRanges.length; ++i) {
-        let depthData = await this.__loadFromIndex(index, timeRanges[i]);
-        result.push(...depthData);
+    
+    while (timeRanges.length > 0) {
+        let timeRange = timeRanges.pop();
+        let data = await this.__requestToElsIndex(index.name, timeRange);
+        if (data.total <= data.entities.length) {
+            result.push(...data.entities);
+        } else {
+            let addTimeRanges = [timeRange.getFirstHalf(), timeRange.getSecondHalf()];
+            let optIndicator = data.total / this.requestSize / 2;
+
+            while (this.useOptimizationForBinarySearch && optIndicator > 1) {
+                optIndicator /= 2;
+                addTimeRanges = addTimeRanges
+                    .map(x => [x.getFirstHalf(), x.getSecondHalf()])
+                    .reduce((a, b) => a.concat(b));
+            }
+
+            timeRanges.push(...addTimeRanges);
+        }
     }
 
     return result;
