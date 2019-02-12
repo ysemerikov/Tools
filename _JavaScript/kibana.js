@@ -1,3 +1,10 @@
+// Instruction:
+// 1. open log-utc.servicetitan.com (I didn't test it with PST log).
+// 2. execute your search use regular kibana interface. For accuracy better to use absolute time ranges.
+// 3. select fields (by clicking 'add') in regular kibana UI that you want to download.
+// 4. insert this script into chrome console and click on new button that near by regular search button.
+// 5. no need to insert the script twice till you close the kibana tab.
+
 Helper = {
     isNonEmptyString: function(x) {
         return (typeof x === 'string' || x instanceof String) && x.length !== 0;
@@ -21,11 +28,6 @@ Helper = {
         return await actionAsync();
     },
     load: function(queryString, from, to, fields) {
-        if (!queryString) queryString = 'Deployment:"master" && Code:"IncomingCall" && Message:"total response time"';
-        if (!from) from = new Date("2019-01-31T22:00:00");
-        if (!to) to = new Date("2019-02-02T00:00:00");
-        if (!fields) fields = ["Message"];
-
         let loader = new KibanaLoader(queryString, fields);
         return loader.load(new TimeRange(from, to));
     },
