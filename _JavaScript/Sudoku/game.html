@@ -44,6 +44,7 @@
         #grid td.right input { border-right:   2px solid #000000; }
         #grid td.top input { border-top:   2px solid #000000; }
         #grid td.bottom input { border-bottom:   2px solid #000000; }
+        #grid input.error { background-color: #ff0000; }
     </style>
 </head>
 <body>
@@ -54,11 +55,11 @@
         <!-- ko foreach: [0,1,2,3,4,5,6,7,8] -->
         <tr data-bind="foreach: [0,1,2,3,4,5,6,7,8]">
             <td data-bind="css: {left: $data%3===0, right:$data%3===2, top:$parent%3===0, bottom:$parent%3===2}">
-                <!-- ko with: $root.Field[$parent][$data] -->
+                <!-- ko with: $root.Field[$data][$parent] -->
                 <input type="text" maxlength="1"
                        onkeypress="return '0' < event.key && event.key <= '9';"
-                       data-bind="value: Value,
-                                  enable: IsEditable" />
+                       data-bind="value: Value, enable: IsEditable,
+                                  css: {error: IsError}" />
                 <!-- /ko -->
             </td>
         </tr>
@@ -67,6 +68,9 @@
 </td><td>
     <button type="button" class="btn" data-bind="enable: FreezeAllowed, click: Freeze">Freeze</button><br/>
     <button type="button" class="btn" data-bind="click: SaveLoad">Save/Load</button><br/>
+    <button type="button" class="btn" data-bind="click: Check">Check</button>
+    <!-- ko if: HasErrors --><button type="button" class="btn" data-bind="click: HideErrors">Hide</button><!-- /ko -->
+    <br/>
 </td></tr>
 <tr><td colspan="2">
     <!-- ko if: SaveLoadInProcess -->
