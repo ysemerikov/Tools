@@ -33,24 +33,32 @@ class Sudoku {
     }
 
     static _createCellSets(field) {
-        let result = {Rows: [], Cols: [], Squares: undefined};
-        let squares = new Array(9).fill(0).map(x => []);
+        let g = () => new Array(9).fill(0).map(x => new cellSet());
+        let result = {Rows: g(), Cols: g(), Squares: g(), All:[]};
 
-        for (let i = 0; i < 9; i++) {
-            let row = [];
-            let col = [];
-            for (let j = 0; j < 9; ++j) {
-                row.push(field[i][j]);
-                col.push(field[j][i]);
-                
-                let squareNumber = Math.floor(i/3) + 3 * Math.floor(j/3);
-                squares[squareNumber].push(field[i][j]);
-            }
-            result.Rows.push(new cellSet(row));
-            result.Cols.push(new cellSet(col));
+        for (let i = 0; i < 9; ++i) {
+            result.All.push(result.Rows[i]);
+            result.All.push(result.Cols[i]);
+            result.All.push(result.Squares[i]);
         }
 
-        result.Squares = squares.map(x => new cellSet(x));
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; ++j) {
+                let rowSet = result.Rows[i];
+                let colSet = result.Cols[i];
+                let squareSet = result.Squares[(Math.floor(i/3) + 3 * Math.floor(j/3))];
+
+                rowSet.add(field[i][j]);
+                // field[i][j].setRowSet(rowSet);
+
+                colSet.add(field[j][i]);
+                // field[j][i].setColSet(colSet);
+
+                squareSet.add(field[i][j]);
+                // field[i][j].setSquareSet(squareSet);
+            }
+        }
+
         return result;
     }
 
@@ -63,7 +71,7 @@ class Sudoku {
         for (let x = 0; x < 9; ++x) {
             for (let y = 0; y < 9; ++y) {
                 let cell = this.Field[x][y];
-                if (Sudoku.fromSymbolToValue(cell.Value()) > 0)
+                if (cell.getNumericValue() > 0)
                     cell.IsEditable(false);
             }
         }
@@ -72,10 +80,8 @@ class Sudoku {
     SaveLoad() {
         let serializedValue = '';
         for (let x = 0; x < 9; ++x) {
-            for (let y = 0; y < 9; ++y) {
-                let value = Sudoku.fromSymbolToValue(this.Field[x][y].Value());
-                serializedValue += value;
-            }
+            for (let y = 0; y < 9; ++y)
+                serializedValue += this.Field[x][y].getNumericValue();
         }
 
         this.SerializedValue(serializedValue);
@@ -99,10 +105,7 @@ class Sudoku {
     }
 
     Check() {
-        let isRowsGood = this._cellSets.Rows.map(x => x.check()).every(x => x === true);
-        let isColsGood = this._cellSets.Cols.map(x => x.check()).every(x => x === true);
-        let isSquaresGood = this._cellSets.Squares.map(x => x.check()).every(x => x === true);
-        let isGood = isRowsGood && isColsGood && isSquaresGood;
+        let isGood = this._cellSets.All.map(x => x.check()).every(x => x === true);
         this.HasErrors(!isGood);
         if (isGood)
             alert('Great!');
@@ -118,18 +121,48 @@ class Sudoku {
             
         this.HasErrors(false);
     }
+
+    Resolve1() {
+        let allSets = this._cellSets.All;
+        for (let i = 0; i < allSets.length; ++i) {
+            let cellSet = allSets[i];
+            let sudokuValues = cellSet.getSudokuValues();
+            if (sudokuValues.length !== 8)
+                continue;
+
+            let emptyCells = cellSet._cells.filter(x => x.getNumericValue() === 0);
+            if (emptyCells.length !== 1)
+                continue;
+
+            emptyCells[0].Value(45 - sudokuValues.reduce((a, b) => a + b, 0));
+        }
+    }
 }
 
 class cellSet {
-    constructor(cells) {
-        this._cells = cells;
+    constructor() {
+        this._cells = [];
+    }
+    
+    add(cell) {
+        if (this._cells.length === 9)
+            throw "cell set is overloaded.";
+        this._cells.push(cell);
+    }
+
+    getNumericValues() {
+        return this._cells.map(x => x.getNumericValue());
+    }
+
+    getSudokuValues() {
+        return Array.from(new Set(this.getNumericValues().filter(x => x > 0)));
     }
 
     check() {
         let hs = {};
         for (let i = 0; i < this._cells.length; ++i) {
             let cell = this._cells[i];
-            let value = Sudoku.fromSymbolToValue(cell.Value());
+            let value = cell.getNumericValue();
 
             if (value === 0)
             {
@@ -152,6 +185,10 @@ class cell {
         this.Value = ko.observable();
         this.IsEditable = ko.observable(true);
         this.IsError = ko.observable(false);
+    }
+    
+    getNumericValue() {
+        return Sudoku.fromSymbolToValue(this.Value());
     }
 }
 
