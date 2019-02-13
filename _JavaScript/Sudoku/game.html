@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>-->
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <!--<script type="application/javascript" src="knockout.extensions.js"></script>-->
+    <script type="application/javascript" src="game.js"></script>
+
+    <title>HTML Sudoku Board</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        html, body {
+            background-color: #FAFAFA
+        }
+        #sudoku > tbody > tr > td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        #grid {
+            border: 2px solid #000000;
+        }
+        #grid td {
+            border: 1px solid #000000;
+            text-align: center;
+            vertical-align: middle;
+        }
+        #grid input {
+            color: #000000;
+            padding: 0;
+            border: 0;
+            text-align: center;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            background-color: #FFFFFF;
+            outline: none;
+        }
+        #grid input:disabled {
+            background-color: #EEEEEE;
+        }
+        #grid td.left input { border-left:   2px solid #000000; }
+        #grid td.right input { border-right:   2px solid #000000; }
+        #grid td.top input { border-top:   2px solid #000000; }
+        #grid td.bottom input { border-bottom:   2px solid #000000; }
+    </style>
+</head>
+<body>
+
+<table id="sudoku"><tbody>
+<tr><td>
+    <table id="grid"><tbody>
+        <!-- ko foreach: [0,1,2,3,4,5,6,7,8] -->
+        <tr data-bind="foreach: [0,1,2,3,4,5,6,7,8]">
+            <td data-bind="css: {left: $data%3===0, right:$data%3===2, top:$parent%3===0, bottom:$parent%3===2}">
+                <!-- ko with: $root.Field[$parent][$data] -->
+                <input type="text" maxlength="1"
+                       onkeypress="return '0' < event.key && event.key <= '9';"
+                       data-bind="value: Value,
+                                  enable: IsEditable" />
+                <!-- /ko -->
+            </td>
+        </tr>
+        <!-- /ko -->
+    </tbody></table>
+</td><td>
+    <button type="button" class="btn" data-bind="enable: FreezeAllowed, click: Freeze">Freeze</button>
+    <br/>
+</td></tr>
+</tbody></table>
+
+</body>
+</html>
