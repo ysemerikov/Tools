@@ -65,10 +65,15 @@
         <!-- /ko -->
     </tbody></table>
 </td><td>
-    <button type="button" class="btn" data-bind="enable: FreezeAllowed, click: Freeze">Freeze</button>
-    <br/>
+    <button type="button" class="btn" data-bind="enable: FreezeAllowed, click: Freeze">Freeze</button><br/>
+    <button type="button" class="btn" data-bind="click: SaveLoad">Save/Load</button><br/>
+</td></tr>
+<tr><td colspan="2">
+    <!-- ko if: SaveLoadInProcess -->
+    <textarea style="width: 444px;" data-bind="value: SerializedValue"></textarea><br/>
+    <button type="button" class="btn" data-bind="click: Load">Load</button>
+    <!-- /ko -->
 </td></tr>
 </tbody></table>
-
 </body>
 </html>
