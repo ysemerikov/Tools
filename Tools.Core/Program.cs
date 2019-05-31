@@ -17,6 +17,7 @@ namespace Tools.Core
         {
             typeof(FileDuplicationDetectorStarter),
             typeof(HttpTesterStarter),
+            typeof(EndOfLinesFixerStarter),
             typeof(DialpadCallbackSender),
         };
 

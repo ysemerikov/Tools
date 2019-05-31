@@ -16,9 +16,6 @@ namespace Tools
                 case nameof(SerializerComparer):
                     action = EntryPoint.Start;
                     break;
-                case nameof(EndOfLinesFixer):
-                    action = EndOfLinesFixer.Start;
-                    break;
                 default:
                     action = null;
                     break;

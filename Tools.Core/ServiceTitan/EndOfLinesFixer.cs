@@ -3,9 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Tools.Core;
+using Tools.Core.Logging;
 
 namespace Tools
 {
+    public class EndOfLinesFixerStarter : StarterBase
+    {
+        public void Do()
+        {
+            EndOfLinesFixer.Start();
+        }
+
+        public EndOfLinesFixerStarter(ILogger logger, ArgumentReader argumentReader) : base(logger, argumentReader)
+        {
+        }
+    }
+
     public class EndOfLinesFixer
     {
         private readonly string[] extensions;
