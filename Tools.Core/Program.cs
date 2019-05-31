@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tools.Core.FileDuplicationDetectorNamespace;
 using Tools.Core.HttpTesterNamespace;
 using Tools.Core.Logging;
+using Tools.Core.ServiceTitan;
 
 namespace Tools.Core
 {
@@ -15,10 +17,13 @@ namespace Tools.Core
         {
             typeof(FileDuplicationDetectorStarter),
             typeof(HttpTesterStarter),
+            typeof(DialpadCallbackSender),
         };
 
         private static async Task Main(string[] args)
         {
+            ServicePointManager.DefaultConnectionLimit = 1024;
+
             var logger = new SimplyConsoleLogger(LoggerLevel.Debug);
             var argumentReader = new ArgumentReader(args);
 
@@ -59,7 +64,7 @@ namespace Tools.Core
         {
             var className = argumentReader.ReadNextStringOrDefault();
             return className == default
-                ? Starters.First()
+                ? Starters.Last()
                 : Starters.Single(x => x.Name.Equals(className, StringComparison.CurrentCultureIgnoreCase));
         }
 
