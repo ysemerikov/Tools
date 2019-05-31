@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AsyncEnumerator" Version="3.0.2-beta" />
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.4.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+      <PackageReference Include="Twilio" Version="5.29.1" />
     </ItemGroup>
 
 </Project>

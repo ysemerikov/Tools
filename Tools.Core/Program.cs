@@ -19,6 +19,8 @@ namespace Tools.Core
             typeof(HttpTesterStarter),
             typeof(EndOfLinesFixerStarter),
             typeof(DialpadCallbackSender),
+            typeof(TwilioExtender),
+            typeof(TenantIdFixer),
         };
 
         private static async Task Main(string[] args)
