@@ -21,6 +21,7 @@ namespace Tools.Core
             typeof(DialpadCallbackSender),
             typeof(TwilioExtender),
             typeof(TenantIdFixer),
+            typeof(FuckingReportStarter),
         };
 
         private static async Task Main(string[] args)
