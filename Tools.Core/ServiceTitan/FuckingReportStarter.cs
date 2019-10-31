@@ -6,9 +6,9 @@ using Tools.Core.Logging;
 
 namespace Tools.Core.ServiceTitan
 {
-    public class FuckingReportStarter : StarterBase
+    public class FuckingReportStarter
     {
-        public FuckingReportStarter(ILogger logger, ArgumentReader argumentReader) : base(logger, argumentReader)
+        public FuckingReportStarter(ILogger logger, ArgumentReader argumentReader)
         {
         }
 

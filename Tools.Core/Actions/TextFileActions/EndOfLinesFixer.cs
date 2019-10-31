@@ -3,41 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Tools.Core;
-using Tools.Core.Logging;
 
-namespace Tools
+namespace Tools.Core.TextFileActions
 {
-    public class EndOfLinesFixerStarter : StarterBase
+    public class EndOfLinesFixer : IAction
     {
-        public void Do()
-        {
-            EndOfLinesFixer.Start();
-        }
-
-        public EndOfLinesFixerStarter(ILogger logger, ArgumentReader argumentReader) : base(logger, argumentReader)
-        {
-        }
-    }
-
-    public class EndOfLinesFixer
-    {
-        private readonly string[] extensions;
-        private readonly bool recursive;
-
-        private EndOfLinesFixer(string[] extensions, bool recursive)
-        {
-            this.extensions = extensions;
-            this.recursive = recursive;
-        }
-
-        public static void Start()
+        public Task Do()
         {
             var extensions = new[] { "cs", "config", "csproj", "js", "cshtml", "resx" };
-            Start(extensions, true, @"C:\servicetitan\app");
+            return Do(extensions, true, @"C:\servicetitan\app");
         }
 
-        private static void Start(string[] extensions, bool recursive, params string[] directoryPaths)
+        private static async Task Do(string[] extensions, bool recursive, params string[] directoryPaths)
         {
             var directories = directoryPaths.Select(path =>
             {
@@ -47,8 +24,7 @@ namespace Tools
                 return directory;
             });
 
-            var fixer = new EndOfLinesFixer(extensions, recursive);
-            var count = fixer.Fix(directories);
+            var count = await Fix(extensions, recursive, directories);
             Console.WriteLine("Total {0} files affected.", count);
         }
 
@@ -61,7 +37,7 @@ namespace Tools
             return "*." + ext;
         }
 
-        private int Fix(IEnumerable<DirectoryInfo> directories)
+        private static async Task<int> Fix(string[] extensions, bool recursive, IEnumerable<DirectoryInfo> directories)
         {
             var tasks =
                 extensions
@@ -70,7 +46,7 @@ namespace Tools
                         directories.SelectMany(d => d.EnumerateFiles(ToPattern(e), recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)))
                     .Select(Fix);
 
-            var results = Task.WhenAll(tasks).Result;
+            var results = await Task.WhenAll(tasks);
             return results.Count(t => t);
         }
 
