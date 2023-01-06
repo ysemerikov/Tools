@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Tools.Core.Logging;
 
-namespace Tools.Core.FileDuplicationDetectorNamespace
+namespace Tools.Core.Actions.BinaryFilesActions.FileDuplicationDetectorNamespace
 {
     public class FileDuplicationDetectorStarter : IAction
     {

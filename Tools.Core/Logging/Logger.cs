@@ -7,7 +7,7 @@ namespace Tools.Core.Logging
     {
         private readonly LoggerLevel minWriteLevel;
 
-        public void WriteLine(string line, LoggerLevel? loggerLevel = LoggerLevel.Info)
+        public void WriteLine(string? line, LoggerLevel? loggerLevel = LoggerLevel.Info)
         {
             if (loggerLevel >= minWriteLevel)
                 Console.WriteLine(line);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Pdf.Models;
 
@@ -105,7 +106,7 @@ namespace Pdf
             return new ObjectData(reader.ReadBytes(length));
         }
 
-        private bool TryReadObjectDataStart(out string end)
+        private bool TryReadObjectDataStart([NotNullWhen(true)] out string? end)
         {
             if (reader.TryRead("<<"))
             {
@@ -125,8 +126,8 @@ namespace Pdf
 
         public PdfXref ReadXref()
         {
-            var lines = default(List<PdfXrefLine>);
-            var length = reader.Forget(r =>
+            var lines = default(List<PdfXrefLine>?);
+            var length = reader.Forget(_ =>
             {
                 if (!reader.TryReadLine("xref"))
                     throw new Exception($"xref is expected, position = {reader.Position}");
@@ -166,7 +167,7 @@ namespace Pdf
         {
             var startxref = -1;
 
-            var length = reader.Forget(r =>
+            var length = reader.Forget(_ =>
             {
                 if (!reader.TryReadLine("trailer"))
                     throw new Exception($"trailer is expected, position = {reader.Position}");
@@ -202,7 +203,7 @@ namespace Pdf
                 return length;
             }
 
-            private bool TryGet(string key, out string value)
+            private bool TryGet(string key, [NotNullWhen(true)] out string? value)
             {
                 var toFind = $"/{key} ";
                 var index = str.IndexOf(toFind, StringComparison.InvariantCulture);

@@ -4,9 +4,9 @@ namespace Pdf.Models
     {
         public readonly int OrderNumber;
         public readonly int GenerationNumber;
-        public readonly byte[] StreamBytes;
+        public readonly byte[]? StreamBytes;
 
-        public PdfObject(byte[] raw, in int orderNumber, in int generationNumber, byte[] streamBytes)
+        public PdfObject(byte[] raw, in int orderNumber, in int generationNumber, byte[]? streamBytes)
             : base(raw)
         {
             OrderNumber = orderNumber;

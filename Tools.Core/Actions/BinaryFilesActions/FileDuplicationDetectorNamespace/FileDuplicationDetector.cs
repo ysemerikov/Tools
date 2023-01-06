@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Tools.Core.Logging;
 
-namespace Tools.Core.FileDuplicationDetectorNamespace
+namespace Tools.Core.Actions.BinaryFilesActions.FileDuplicationDetectorNamespace
 {
     public class FileDuplicationDetector
     {
@@ -31,7 +31,7 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
                 .SelectMany(x => x.EnumerateFiles("*", SearchOption.AllDirectories))
                 .ToList();
 
-            var duplicates = await SplitBy(file => Task.FromResult(file.Length), new[] {startedList});
+            var duplicates = await SplitBy(file => Task.FromResult(file.Length), new[] { startedList });
             duplicates = await SplitBy(ByPart, duplicates);
             duplicates = await SplitBy(ByMd5, duplicates);
             duplicates = await SplitBy(BySha256, duplicates);
@@ -39,7 +39,8 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
             WorkWithDuplicates(duplicates.ToList());
         }
 
-        private async Task<IEnumerable<List<FileInfo>>> SplitBy<T>(Func<FileInfo, Task<T>> func, IEnumerable<List<FileInfo>> groups)
+        private async Task<IEnumerable<List<FileInfo>>> SplitBy<T>(Func<FileInfo, Task<T>> func,
+            IEnumerable<List<FileInfo>> groups)
         {
             var counter = 0;
             var tasks = groups
@@ -62,7 +63,7 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
 
         private static async Task<ByteArray> ByPart(FileInfo file)
         {
-            const int offset = 512*1024;
+            const int offset = 512 * 1024;
             const int size = 1024;
 
             if (file.Length < size + offset)
@@ -92,9 +93,9 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
 
         private static async Task<ByteArray> ByHash<T>(FileInfo file, Func<T> getAlgo) where T : HashAlgorithm
         {
-            const int maxBufferSize = 1024*1024;
+            const int maxBufferSize = 1024 * 1024;
 
-            var bufferSize = (int) Math.Min(file.Length + 1, maxBufferSize);
+            var bufferSize = (int)Math.Min(file.Length + 1, maxBufferSize);
             var buffer = new byte[bufferSize];
             var outputBuffer = new byte[buffer.Length];
 
@@ -108,7 +109,7 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
                 }
 
                 hashAlgo.TransformFinalBlock(buffer, 0, 0);
-                return new ByteArray(hashAlgo.Hash);
+                return new ByteArray(hashAlgo.Hash ?? Array.Empty<byte>());
             }
         }
 
@@ -117,7 +118,7 @@ namespace Tools.Core.FileDuplicationDetectorNamespace
             var links = new List<string>();
 
             var counter = 0;
-            for (var i = 0; i<duplicates.Count ;i++)
+            for (var i = 0; i < duplicates.Count; i++)
             {
                 var list = duplicates[i];
                 counter += list.Count;

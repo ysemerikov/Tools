@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Tools.Core
@@ -27,9 +28,16 @@ namespace Tools.Core
             return new ArgumentReader(args, position);
         }
 
-        public string ReadNextStringOrDefault()
+        public bool TryReadNext([NotNullWhen(true)] out string? value)
         {
-            return position < args.Count ? args[position++] : default;
+            if (position < args.Count)
+            {
+                value = args[position++];
+                return true;
+            }
+
+            value = default;
+            return false;
         }
     }
 }

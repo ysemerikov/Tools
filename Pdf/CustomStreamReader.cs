@@ -12,7 +12,7 @@ namespace Pdf
         byte[] ReadBytes(int length);
 
         bool TryRead(IEnumerable<char> chars);
-        bool TryReadLine(string chars = default);
+        bool TryReadLine(string? chars = default);
         bool TryReadPositiveInt(out int value);
         bool IsFinished();
 
@@ -80,10 +80,9 @@ namespace Pdf
             return true;
         }
 
-        public bool TryReadLine(string expected = default)
+        public bool TryReadLine(string? expected = default)
         {
-            if (expected == null)
-                expected = string.Empty;
+            expected ??= string.Empty;
             return TryRead(expected.Concat("\r\n")) || TryRead(expected.Concat("\n"));
         }
 

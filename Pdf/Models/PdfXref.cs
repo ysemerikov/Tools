@@ -6,10 +6,10 @@ namespace Pdf.Models
     {
         public readonly List<PdfXrefLine> Lines;
 
-        public PdfXref(byte[] raw, List<PdfXrefLine> lines) 
+        public PdfXref(byte[] raw, List<PdfXrefLine>? lines)
             : base(raw)
         {
-            Lines = lines;
+            Lines = lines ?? new List<PdfXrefLine>();
         }
     }
 
