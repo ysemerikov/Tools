@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tools.Core.TextFileActions;
+namespace Tools.Actions.TextFileActions;
 
 public class EndOfLinesFixer : IAction
 {

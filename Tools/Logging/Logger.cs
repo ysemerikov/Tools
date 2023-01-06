@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Tools.Core.Logging;
+namespace Tools.Logging;
 
 public class SimplyConsoleLogger : ILogger
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Pdf;
 
-namespace Tools.Core;
+namespace Tools;
 
 internal class Program
 {

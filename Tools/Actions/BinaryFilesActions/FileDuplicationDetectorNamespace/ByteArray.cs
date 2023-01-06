@@ -1,6 +1,6 @@
 using System;
 
-namespace Tools.Core.Actions.BinaryFilesActions.FileDuplicationDetectorNamespace;
+namespace Tools.Actions.BinaryFilesActions.FileDuplicationDetectorNamespace;
 
 public class ByteArray
 {

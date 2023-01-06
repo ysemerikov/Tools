@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Tools.Core;
+namespace Tools;
 
 public interface IAction
 {

@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Web;
 
-namespace Tools.Core;
+namespace Tools;
 
 /// <summary>
 /// This class is created to replace return of HttpUtility.ParseQueryString("").

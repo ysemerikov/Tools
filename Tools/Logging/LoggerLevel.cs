@@ -1,4 +1,4 @@
-namespace Tools.Core.Logging;
+namespace Tools.Logging;
 
 public enum LoggerLevel
 {
