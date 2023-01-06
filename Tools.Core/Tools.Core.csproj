@@ -7,17 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AsyncEnumerator" Version="4.0.2" />
-      <PackageReference Include="DotNetZip" Version="1.13.6" />
-      <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="9.4.2" />
-      <PackageReference Include="Microsoft.Azure.Storage.Common" Version="9.4.2" />
-      <PackageReference Include="Microsoft.Azure.Storage.File" Version="9.4.2" />
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.4.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
-      <PackageReference Include="Twilio" Version="5.33.1" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Pdf\Pdf.csproj" />
     </ItemGroup>
 

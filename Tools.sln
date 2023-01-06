@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicateContentIncludeDetector", "DuplicateContentIncludeDetector\DuplicateContentIncludeDetector.csproj", "{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForgottenFilesDetector", "ForgottenFilesDetector\ForgottenFilesDetector.csproj", "{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisSaver", "RedisSaver\RedisSaver.csproj", "{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.Core", "Tools.Core\Tools.Core.csproj", "{0E55AA55-3FC9-4E25-9D2D-553F1963D0C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pdf", "Pdf\Pdf.csproj", "{7DC70364-A688-46E6-AB2F-5EFF4E22B573}"
@@ -21,26 +15,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59BFD01E-1E27-4D0D-A06D-E9F4744E72ED}.Release|x64.ActiveCfg = Release|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AA51E1D-3B22-49E9-B34C-FEC18694FFE0}.Release|x64.ActiveCfg = Release|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Debug|x64.Build.0 = Debug|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Release|x64.ActiveCfg = Release|Any CPU
-		{3DD70C46-F9CD-4AC4-9256-6DA442EDA9CE}.Release|x64.Build.0 = Release|Any CPU
 		{0E55AA55-3FC9-4E25-9D2D-553F1963D0C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E55AA55-3FC9-4E25-9D2D-553F1963D0C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E55AA55-3FC9-4E25-9D2D-553F1963D0C0}.Debug|x64.ActiveCfg = Debug|Any CPU
