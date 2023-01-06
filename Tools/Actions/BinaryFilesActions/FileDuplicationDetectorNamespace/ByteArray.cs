@@ -1,5 +1,3 @@
-using System;
-
 namespace Tools.Actions.BinaryFilesActions.FileDuplicationDetectorNamespace;
 
 public class ByteArray

@@ -1,5 +1,3 @@
-using System;
-
 namespace Pdf;
 
 public static class StaticHelper

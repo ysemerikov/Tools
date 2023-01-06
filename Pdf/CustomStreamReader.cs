@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Pdf;
+﻿namespace Pdf;
 
 public interface ICustomStreamReader
 {

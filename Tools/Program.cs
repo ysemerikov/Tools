@@ -1,5 +1,4 @@
-﻿using System;
-using Pdf;
+﻿using Pdf;
 
 namespace Tools;
 
