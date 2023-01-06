@@ -1,8 +1,7 @@
-namespace Tools.Core.Logging
+namespace Tools.Core.Logging;
+
+public enum LoggerLevel
 {
-    public enum LoggerLevel
-    {
-        Debug,
-        Info,
-    }
+    Debug,
+    Info,
 }

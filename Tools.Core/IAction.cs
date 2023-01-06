@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace Tools.Core
+namespace Tools.Core;
+
+public interface IAction
 {
-    public interface IAction
-    {
-        Task Do();
-    }
+    Task Do();
 }

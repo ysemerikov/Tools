@@ -1,12 +1,11 @@
-namespace Pdf.Models
-{
-    public class PdfTrailer : PdfElementBase
-    {
-        public readonly int StartXref;
+namespace Pdf.Models;
 
-        public PdfTrailer(byte[] raw, int startxref) : base(raw)
-        {
-            StartXref = startxref;
-        }
+public class PdfTrailer : PdfElementBase
+{
+    public readonly int StartXref;
+
+    public PdfTrailer(byte[] raw, int startxref) : base(raw)
+    {
+        StartXref = startxref;
     }
 }

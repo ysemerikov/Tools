@@ -1,7 +1,6 @@
-namespace Tools.Core.Logging
+namespace Tools.Core.Logging;
+
+public interface ILogger
 {
-    public interface ILogger
-    {
-        void WriteLine(string? line, LoggerLevel? loggerLevel = LoggerLevel.Info);
-    }
+    void WriteLine(string? line, LoggerLevel? loggerLevel = LoggerLevel.Info);
 }
