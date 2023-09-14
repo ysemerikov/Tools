@@ -1,3 +1,3 @@
 using UsStatesComparer.Zillow;
 
-await EntryPoint.Do();
+await ZillowEntryPoint.Run();

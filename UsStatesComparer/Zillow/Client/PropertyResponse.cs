@@ -1,6 +1,6 @@
 // ReSharper disable InconsistentNaming
 #pragma warning disable CS8618
-namespace UsStatesComparer.Zillow;
+namespace UsStatesComparer.Zillow.Client;
 
 public class PropertyResponse
 {
@@ -31,7 +31,7 @@ public class Property
     public string currency { get; set; }
     public string livingArea { get; set; }
     public string livingAreaValue { get; set; }
-    public School[] schools { get; set; }
+    public School[]? schools { get; set; }
 }
 
 public class School

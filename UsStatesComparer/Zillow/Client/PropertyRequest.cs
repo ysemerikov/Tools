@@ -1,4 +1,4 @@
-namespace UsStatesComparer.Zillow;
+namespace UsStatesComparer.Zillow.Client;
 
 public class PropertyRequest
 {
